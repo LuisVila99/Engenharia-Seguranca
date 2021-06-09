@@ -1,9 +1,12 @@
+//const http=require('http');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 
-function register(username, password){
+function register(){
+	var username = document.getElementById("username").value
+	var password = document.getElementById("password").value
 	bcrypt.hash(password, saltRounds, function(err, hash) {
     	if (err)
     		throw err;
@@ -16,7 +19,9 @@ function register(username, password){
 	
 };
 
-async function login(username, password){
+async function login(){
+	var username = document.getElementById("username").value
+	var password = document.getElementById("password").value
 	fs.readFile('./users.txt', 'utf8' , (err, data) => {
   		if (err) {
     		throw err;
