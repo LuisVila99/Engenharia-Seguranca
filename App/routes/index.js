@@ -31,21 +31,23 @@ router.post('/', (req, res, next) => {
 
 
 
-router.post('/', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   var username = req.body.username2;
   var password = req.body.password2;
-  fs.readFile('../users.txt', 'utf8' , (err, data) => {
+  fs.readFile('../users.txt', 'utf8' , async (err, data) => {
     if (err) {
       throw err;
     }
-      if(login_aux(username, password, data)){
+      x = await login_aux(username, password, data);
+      if(x){
           x = __dirname.split('/routes')[0] + '/views/home.html';
           console.log('here');
-          res.render(x);
+          res.sendFile(x);
       }
       else{
+        console.log('here2')
         x = __dirname.split('/routes')[0] + '/views/login.html';
-        res.render(x);
+        res.sendFile(x);
       };
   });
 });
