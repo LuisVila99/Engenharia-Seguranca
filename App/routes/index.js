@@ -11,9 +11,7 @@ router.get('/', function(req, res, next) {
   res.sendFile(x);
 });
 
-router.post('/register', (req, res, next) => {
-  x = __dirname.split('/routes')[0] + '/views/login.html';
-  res.sendFile(x);
+router.post('/', (req, res, next) => {
   var username = req.body.username;
   var password = req.body.password;
   bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -25,20 +23,30 @@ router.post('/register', (req, res, next) => {
        if (err)
          throw err;
      });
+     x = __dirname.split('/routes')[0] + '/views/login.html';
+     res.sendFile(x);
 });
 })
 
 
-router.post('/login', async (req, res, next) => {
-  x = __dirname.split('/routes')[0] + '/views/login.html';
-  res.sendFile(x);
+
+
+router.post('/', async (req, res, next) => {
   var username = req.body.username2;
   var password = req.body.password2;
   fs.readFile('../users.txt', 'utf8' , (err, data) => {
     if (err) {
       throw err;
     }
-      login_aux(username, password, data);
+      if(login_aux(username, password, data)){
+          x = __dirname.split('/routes')[0] + '/views/home.html';
+          console.log('here');
+          res.render(x);
+      }
+      else{
+        x = __dirname.split('/routes')[0] + '/views/login.html';
+        res.render(x);
+      };
   });
 });
 
@@ -47,8 +55,6 @@ async function login_aux(username, password, data) {
 
 	for (let i = 0; i < entries.length - 1; i++){
 		var us_pa = entries[i].split(';');
-    console.log(password);
-    console.log(us_pa[1]);
 		var match = await bcrypt.compare(password, us_pa[1]);
 		if(us_pa[0] == username && match){
 			console.log('Login successful');
