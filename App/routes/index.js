@@ -32,7 +32,7 @@ router.post('/register', (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   x = __dirname.split('/routes')[0] + '/views/login.html';
   res.sendFile(x);
-  var username = req.body.username1;
+  var username = req.body.username2;
   var password = req.body.password2;
   fs.readFile('../users.txt', 'utf8' , (err, data) => {
     if (err) {
@@ -47,6 +47,8 @@ async function login_aux(username, password, data) {
 
 	for (let i = 0; i < entries.length - 1; i++){
 		var us_pa = entries[i].split(';');
+    console.log(password);
+    console.log(us_pa[1]);
 		var match = await bcrypt.compare(password, us_pa[1]);
 		if(us_pa[0] == username && match){
 			console.log('Login successful');
