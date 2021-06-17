@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

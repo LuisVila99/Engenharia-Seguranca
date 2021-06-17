@@ -4,6 +4,7 @@ var router = express.Router();
 const saltRounds = 10;
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const alert = require('alert');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,18 +15,37 @@ router.get('/', function(req, res, next) {
 router.post('/', (req, res, next) => {
   var username = req.body.username;
   var password = req.body.password;
-  bcrypt.hash(password, saltRounds, function(err, hash) {
-    if (err)
-      throw err;
-    toWrite = username + ';' + hash + '\n';
-    console.log(toWrite);
-    fs.appendFile('../users.txt', toWrite, function(err) {
-       if (err)
-         throw err;
-     });
-     x = __dirname.split('/routes')[0] + '/views/login.html';
-     res.sendFile(x);
-});
+  var ok = true;
+
+  //verifica username
+  fs.readFile('../users.txt', 'utf8', (err, data) => {
+    if(err) throw err;
+    var entries = data.split('\n');
+    for (let i = 0; i < entries.length - 1; i++){
+      if(username == entries[i].split(';')[0]){
+        alert('Username already exists!');
+        ok = false;
+        console.log(ok);
+      }
+    }
+  })
+  setTimeout(function(){if(ok){
+    console.log(ok);
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+      if (err)
+        throw err;
+      toWrite = username + ';' + hash + '\n';
+      console.log(toWrite);
+      fs.appendFile('../users.txt', toWrite, function(err) {
+         if (err)
+           throw err;
+       });
+    });}}, 3000);
+  
+  
+
+    x = __dirname.split('/routes')[0] + '/views/login.html';
+    res.sendFile(x);
 })
 
 

@@ -3,8 +3,7 @@ oi2;$2b$10$KI9kxouUoi8S7P1Wv3U0jenSfDwMUwgHbVy1pEQ68/DfK4zjWYOYG
 hugo;$2b$10$kURidadCek7H6JIc/wbcx.bY8SRFZgXcRjot2mdMRqV2pDcTv7PuW
 tf;$2b$10$ZUyMur8UTXO2S/zBvZ5S3e68.Gh8lYcv26EMFZ5zhqWwpWAWymcha
 boas;$2b$10$jHJnMeVJsC0j8XZ7EBN4B.2endzdry7.d4aw/1QrrvJ9pebMx35Hq
-boas;$2b$10$i96yqBRhBv89KEwXWgKy/e//woQOsj3J9fd7n5KFcIY7m3Dj9LIqq
 ooi3;$2b$10$T6VCilibcEcR6QWxvrsrzer1HrD1LVpVOFeuid7yKPzgZT/uGrh7y
 oi3;$2b$10$ivbGXuL1rQgOHEeAiE6Yf.oYCKPfueVPO5McOhgp09p2X553dRCnm
-oi3;$2b$10$C1yn7e7U6m3BcB72h.HZee3fPUJnHwGe5nkRQUG2ZdBQ/U460KH1C
 luis;$2b$10$a4ecxbEWkvR9ekDsHFIdTelOaP5SeiSNsp//k9DmyGq5B40xYcgjO
+novo;$2b$10$zsgrgaLxqE5y84nCbM.kWOs8epbRt8Mh6u7P.ADs48mkCCmWk9uAK
