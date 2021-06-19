@@ -5,6 +5,7 @@ const saltRounds = 10;
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const alert = require('alert');
+const axios = require('axios');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -90,5 +91,13 @@ async function login_aux(username, password, data) {
 	console.log('No such username');
 	return false;
 }
+
+
+router.get('/mycertificates', (req, res, next) => {
+  axios.get('https://fedora:8443/pki/request')
+  .then((res) => {
+    console.log(res.data);
+  });
+});
 
 module.exports = router;
