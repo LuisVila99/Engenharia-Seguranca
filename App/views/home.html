@@ -2,11 +2,19 @@
 <html lang="en"></html>
     <head></head>
     <body>
-        <form action="/mycertificates" method="get">
+        <form action="/mycertificates" method="post">
+            <label for="username3">Username:</label>
+            <input type="text" id="username3" name="username3"><br><br>
+            <label for="password3">Password:</label>
+            <input type="text" id="password3" name="password3"><br><br>
             <input type="submit" value="My certificates">
         </form>
-        <form action="/home" method="post">
-            <input type="button" value="New certificate">
+        <form action="/newcertificate" method="post">
+            <label for="username4">Username:</label>
+            <input type="text" id="username4" name="username4"><br><br>
+            <label for="password4">Password:</label>
+            <input type="text" id="password4" name="password4"><br><br>
+            <input type="submit" value="New certificate">
         </form>
         <form action="/home" method="post">
             <input type="button" value="New timestamp">
