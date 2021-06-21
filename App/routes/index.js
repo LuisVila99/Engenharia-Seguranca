@@ -325,13 +325,12 @@ router.post('/newcertificate', (req, res, next) => {
   var dt = fs.readFileSync('../users.txt', 'utf8');
   console.log(username);
   console.log(password);
-  if(!login_aux(username, password, dt)){
+  if(!login_aux(username, password, dt) == false){
     console.log('Auth error');
     return;
   }
 
-  //requestURL: 'https://fedora:8443/ca/rest/certrequests/18'
-
+  //setTimeout(function(){ console.log("timeout"); }, 3000);
 
   axios.post('https://fedora:8443/ca/rest/certrequests/', dat).then( (res) => {
     console.log(res.data);
@@ -353,6 +352,131 @@ router.post('/newcertificate', (req, res, next) => {
   console.log('here');
   res.sendFile(x);
 });
+
+
+
+
+
+
+router.post('/newcertificatesignedocsp', (req, res, next) => {
+  var dat = {
+    "Attributes": [],
+    "ProfileID": "caOCSPCert",
+    "Renewal": "false",
+    "RemoteHost": [],
+    "RemoteAddress": [],
+    "Input": [
+       {
+          "@id": "i1",
+          "ClassID": "certReqInputImpl",
+          "Name": "Certificate Request Input",
+          "Attribute": [
+             {
+                "@name": "cert_request_type",
+                "Value": "pkcs10",
+                "Descriptor": {
+                   "Syntax": "cert_request_type",
+                   "Description": "Certificate Request Type"
+                }
+             },
+             {
+                "@name": "cert_request",
+                "Value": "-----BEGIN CERTIFICATE REQUEST----- MIICkjCCAXoCAQAwTTEQMA4GA1UECgwHRVhBTVBMRTETMBEGA1UECwwKcGtpLXRvbWNhdDEkMCIG A1UEAwwbQ0EgT0NTUCBTaWduaW5nIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A MIIBCgKCAQEA0U/2nGfi1pcX2laCadTzBZf+BIs+Ny50b0bLM3NQud/8YDr0R46WTDcHm/7cgkBI VpyibFEfuWF52REHL7mJxW5zAmi2mml4+niRSDnY1YoBmOjHecPYVH7deECnlIFTGsQW5q9fLvsx BGWNNo953u3G3SsweQw21dAxl84EnFO9wJS9OW5OQUj1RAZu2U2vaHYtO3E9EkxGa/1bhhUMFPoL RlyGrHbMScOMrQ/nC7Id+cxrJQlC7lOi5f14/2jUzRL3MRBI5E/26kd0uHtmO1MhjkeXj1qB6Vdo Ua+igC0Me/XNdm68YzCAYp0QhT+CNn5dy2jMU44FwDZzqxa8/wIDAQABoAAwDQYJKoZIhvcNAQEL BQADggEBAE2JGtFTWsa8lkq4BaWqoQjNLmhJNAORSOgsRAETPnHa3bIOvFb+fRojIPaDc1bOpnA2 sVMXgMjEaho9DfWCFYYHT+pkA0A9iIWQ6FIKGhjPhPJiLGZNoVqiaaXoOY8FJRu3YZfrMrtGJWtK NUMedbNACKiqsKj54aV+m0nInOb3qKXZBprjMYoktESvGYKSLH5EkGLEiPs9zU/2wmwGXX8W+Y+Q 6Cayb+/IBRMqINGXE2cUpaCUSWm3HJTA08YAAz67VihP+xJB+OJ2o81eKFMfcBSS23cr75VXQLsl K1j29/7tMaPCx5J6nyJq+Woi6D9GNFCGl+GuI/Bv7lZHpaM= -----END CERTIFICATE REQUEST----- ",
+                "Descriptor": {
+                   "Syntax": "cert_request",
+                   "Description": "Certificate Request"
+                }
+             }
+          ]
+       },
+       {
+          "@id": "i2",
+          "ClassID": "submitterInfoInputImpl",
+          "Name": "Requestor Information",
+          "Attribute": [
+             {
+                "@name": "requestor_name",
+                "Value": "1",
+                "Descriptor": {
+                   "Syntax": "string",
+                   "Description": "Requestor Name"
+                }
+             },
+             {
+                "@name": "requestor_email",
+                "Value": "1",
+                "Descriptor": {
+                   "Syntax": "string",
+                   "Description": "Requestor Email"
+                }
+             },
+             {
+                "@name": "requestor_phone",
+                "Value": "1",
+                "Descriptor": {
+                   "Syntax": "string",
+                   "Description": "Requestor Phone"
+                }
+             }
+          ]
+       }
+    ]
+ };
+
+
+  var username = req.body.username5;
+  var password = req.body.password5;
+  var dt = fs.readFileSync('../users.txt', 'utf8');
+  console.log(username);
+  console.log(password);
+  if(!login_aux(username, password, dt)){
+    console.log('Auth error');
+    return;
+  }
+
+
+  setTimeout(function(){ console.log("timeout"); }, 3000);
+
+
+  console.log('aqui1');
+  axios.post('https://fedora:8443/ca/rest/certrequests/', dat).then( (res) => {
+    console.log('aqui2')
+    console.log(res.data);
+    var str = res.data.entries[0].requestURL;
+    console.log(str);
+    console.log('aqui');
+    var num = parseInt(str.split('/')[str.split('/').length - 1]).toString(16);
+    num = '0x' + num;
+    console.log(num);
+    var write = username + ';' + num + '\n';
+    fs.appendFile('../certs.txt', write, function(err) {
+      if (err)
+        throw err;
+    });
+
+  }).catch( () => {});
+
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  console.log('here');
+  res.sendFile(x);
+});
+
+
+
+
+
+router.post('/crl', (req, res, next) => {
+  axios.get('https://fedora:8443/ca/rest/certs').then( (res) => {
+    for(let i=0; i < res.data.entries.length; i++){
+      if(res.data.entries[i].Status == 'REVOKED'){
+        console.log(res.data.entries[i]);
+      };
+    }
+  });
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+});
+
 
 
 
