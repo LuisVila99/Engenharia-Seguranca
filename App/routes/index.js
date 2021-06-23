@@ -465,13 +465,47 @@ router.post('/newcertificatesignedocsp', (req, res, next) => {
 
 
 
-router.post('/crl', (req, res, next) => {
+router.post('/crl', async (req, res, next) => {
+  var cert = req.body.cert0;
+  var r = 0;
+  console.log(cert);
+  var boo = false;
   axios.get('https://fedora:8443/ca/rest/certs').then( (res) => {
     for(let i=0; i < res.data.entries.length; i++){
       if(res.data.entries[i].Status == 'REVOKED'){
-        console.log(res.data.entries[i]);
-      };
+        fs.appendFile('../crl.txt', res.data.entries[i].id + '\n', function(err){
+            if(err) throw err;            
+        });
+      }
+      else {if(i==res.data.entries.length-1) auxiliar(cert);}
     }
+  });
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+});
+
+
+async function auxiliar(cert){
+  var boo = false;
+  cert = '0x' + parseInt(cert).toString(16);
+  fs.readFile('../crl.txt', 'utf8', (err, data) => {
+    if(err) throw err;
+    d = data.split('\n');
+    for(let i = 0; i < d.length; i++){
+      if(cert == d[i]) boo = true;
+    }
+    if(boo) alert('REVOKED');
+    else alert('VALID');
+  });
+}
+
+
+
+router.post('/ocsp', (req, res, next) => {
+  var cert = req.body.cert1;
+  var link = 'https://fedora:8443/ca/rest/certs/' + cert;
+  axios.get(link).then( (res) => {
+      alert(res.data.Status);
   });
   x = __dirname.split('/routes')[0] + '/views/home.html';
   res.sendFile(x);
