@@ -97,6 +97,7 @@ router.post('/mycertificates', async (req, res, next) => {
 
   var username = req.body.username3;
   var password = req.body.password3;
+  var j = 0;
   var dt = fs.readFileSync('../users.txt', 'utf8');
   console.log(username);
   console.log(password);
@@ -113,14 +114,20 @@ router.post('/mycertificates', async (req, res, next) => {
       if(err) throw err;
       var lines = data.split('\n');
       for(let i = 0; i < lines.length-1; i++){
-        var us_cert = lines[i].split(';');
+        
         //console.log(res.data.total);
-        for(let j = 0; j < res.data.total; j++){
+        for(j = 0; j < res.data.total; j++){
+          var us_cert = lines[i].split(';');
           // Receber username por input
+          //console.log(res.data.total);
+          //console.log(us_cert[0]);
+          //console.log(username);
+          //console.log(us_cert[1]);
+          //console.log(res.data.entries[j].id);
           if(us_cert[0] == username && us_cert[1] == res.data.entries[j].id){
             console.log(res.data.entries[j]);
           }
-        }
+        } j=0;
       }
     })
   });
