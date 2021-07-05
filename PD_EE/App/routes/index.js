@@ -7,6 +7,18 @@ const fs = require('fs');
 const alert = require('alert');
 const axios = require('axios');
 
+// Lista de caracteres aceites para validação de input
+const whitelist = ('1234567890'+'abcdefghijklmnopqrstuvwxyz'+'abcdefghijklmnopqrstuvwxyz'.toUpperCase()+'_').split('');
+
+// Função que servirá para validação de input, verificando se algum caracter do input não pertence à lista de caracteres permitidos
+function validate_input(input){
+  for(let i = 0; i < input.length; i++){
+    if(!whitelist.includes(input[i])) return false;
+  }
+  return true;
+}
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   x = __dirname.split('/routes')[0] + '/views/login.html';
@@ -18,6 +30,13 @@ router.post('/', (req, res, next) => {
   var password = req.body.password;
   var ok = true;
 
+  if(!(validate_input(username) && validate_input(password))){
+    x = __dirname.split('/routes')[0] + '/views/login.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }
+  else{
   //verifica username
   fs.readFile('../users.txt', 'utf8', (err, data) => {
     if(err) throw err;
@@ -42,11 +61,13 @@ router.post('/', (req, res, next) => {
            throw err;
        });
     });}}, 3000);
+  }
   
   
 
     x = __dirname.split('/routes')[0] + '/views/login.html';
     res.sendFile(x);
+    
 })
 
 
