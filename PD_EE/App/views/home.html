@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+    <head></head>
+    <body>
+        <form action="/mycertificates" method="post">
+            <label for="username3">Username:</label>
+            <input type="text" id="username3" name="username3"><br><br>
+            <label for="password3">Password:</label>
+            <input type="text" id="password3" name="password3"><br><br>
+            <input type="submit" value="My certificates">
+        </form>
+        <form action="/newcertificate" method="post">
+            <label for="username4">Username:</label>
+            <input type="text" id="username4" name="username4"><br><br>
+            <label for="password4">Password:</label>
+            <input type="text" id="password4" name="password4"><br><br>
+            <input type="submit" value="New certificate">
+        </form>
+        <form action="/newcertificatesignedocsp" method="post">
+            <label for="username5">Username:</label>
+            <input type="text" id="username5" name="username5"><br><br>
+            <label for="password5">Password:</label>
+            <input type="text" id="password5" name="password5"><br><br>
+            <input type="submit" value="New signed certificate">
+        </form>
+        <form action="/home" method="post">
+            <input type="button" value="New timestamp">
+        </form>
+        <form action="/ocsp" method="post">
+            <label for="cert1">Certificate ID:</label>
+            <input type="text" id="cert1" name="cert1"><br><br>
+            <input type="submit" value="OCSP">
+        </form>
+        <form action="/crl" method="post">
+            <label for="cert0">Certificate ID:</label>
+            <input type="text" id="cert0" name="cert0"><br><br>
+            <input type="submit" value="CRL">
+        </form>
+
+    </body>
+</html>
