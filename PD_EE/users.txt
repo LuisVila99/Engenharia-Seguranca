@@ -8,3 +8,4 @@ oi3;$2b$10$ivbGXuL1rQgOHEeAiE6Yf.oYCKPfueVPO5McOhgp09p2X553dRCnm
 luis;$2b$10$a4ecxbEWkvR9ekDsHFIdTelOaP5SeiSNsp//k9DmyGq5B40xYcgjO
 novo;$2b$10$zsgrgaLxqE5y84nCbM.kWOs8epbRt8Mh6u7P.ADs48mkCCmWk9uAK
 Joao_Andre;$2b$10$f7nXFiGsXpxNDvtDDzK44.5Y3u9Sh.AmEn57q3wu04ZM0N84piirO
+Paco;$2b$10$t0OsGvQRTjcAv.eJs12dreShsZ6EAFyoggLePRwKYc/EiZVleQeg.

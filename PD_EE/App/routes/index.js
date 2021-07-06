@@ -20,25 +20,27 @@ function validate_input(input){
 
 
 /* GET home page. */
+// Carrega o HTML da página inicial ao lançar a aplicação
 router.get('/', function(req, res, next) {
   x = __dirname.split('/routes')[0] + '/views/login.html';
   res.sendFile(x);
 });
 
+
+// Registo de um utilizador 
 router.post('/', (req, res, next) => {
-  var username = req.body.username;
-  var password = req.body.password;
+  var username = req.body.username; // input do username
+  var password = req.body.password; // input da password
   var ok = true;
 
-  if(!(validate_input(username) && validate_input(password))){
+  if(!(validate_input(username) && validate_input(password))){ // validação dos inputs recebidos 
     x = __dirname.split('/routes')[0] + '/views/login.html';
     res.sendFile(x);
     alert('Input com caracteres inválidos!')
     return;
   }
-  else{
-  //verifica username
-  fs.readFile('../users.txt', 'utf8', (err, data) => {
+  else {
+  fs.readFile('../users.txt', 'utf8', (err, data) => { //verifica se o username é único 
     if(err) throw err;
     var entries = data.split('\n');
     for (let i = 0; i < entries.length - 1; i++){
@@ -56,44 +58,49 @@ router.post('/', (req, res, next) => {
         throw err;
       toWrite = username + ';' + hash + '\n';
       console.log(toWrite);
-      fs.appendFile('../users.txt', toWrite, function(err) {
+      fs.appendFile('../users.txt', toWrite, function(err) { //caso o username não exista já e se verifique a validação do input, regista o novo user
          if (err)
            throw err;
        });
     });}}, 3000);
   }
-  
-  
-
-    x = __dirname.split('/routes')[0] + '/views/login.html';
+    x = __dirname.split('/routes')[0] + '/views/login.html'; //recarrega o hmtl 
     res.sendFile(x);
     
 })
 
 
 
-
+// Login na aplicação 
 router.post('/login', async (req, res, next) => {
-  var username = req.body.username2;
-  var password = req.body.password2;
-  fs.readFile('../users.txt', 'utf8' , async (err, data) => {
-    if (err) {
-      throw err;
-    }
-      x = await login_aux(username, password, data);
-      if(x){
-          x = __dirname.split('/routes')[0] + '/views/home.html';
-          console.log('here');
-          res.sendFile(x);
+  var username = req.body.username2; //input de username 
+  var password = req.body.password2; //input de password
+
+  if(!(validate_input(username) && validate_input(password))){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/login.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }
+  else {
+    fs.readFile('../users.txt', 'utf8' , async (err, data) => {
+      if (err) {
+        throw err;
       }
-      else{
-        console.log('here2')
-        x = __dirname.split('/routes')[0] + '/views/login.html';
-        res.sendFile(x);
-      };
-  });
+        x = await login_aux(username, password, data); //espera resultado da função auxiliar
+        if(x){
+            x = __dirname.split('/routes')[0] + '/views/home.html'; // carrega a página principal da aplicação se login estiver correto
+            res.sendFile(x);
+        }
+        else{
+          x = __dirname.split('/routes')[0] + '/views/login.html'; // se o login estiver errado recerrega a página de registo/autenticação
+          res.sendFile(x);
+        };
+    });
+  }
 });
 
+//Função auxiliar que verifica se um nome de utilizador e respetiva password se encontram no ficheiro onde estes são guardados
 async function login_aux(username, password, data) {
 	var entries = data.split('\n');
 
@@ -105,13 +112,26 @@ async function login_aux(username, password, data) {
 			return true;
 		}
 		if(us_pa[0] == username && !match){
-			console.log('Wrong password');
+			alert('Wrong password');
 			return false;
 		}
 	}
-	console.log('No such username');
+	alert('No such username');
 	return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 router.post('/mycertificates', async (req, res, next) => {
@@ -139,12 +159,6 @@ router.post('/mycertificates', async (req, res, next) => {
         //console.log(res.data.total);
         for(j = 0; j < res.data.total; j++){
           var us_cert = lines[i].split(';');
-          // Receber username por input
-          //console.log(res.data.total);
-          //console.log(us_cert[0]);
-          //console.log(username);
-          //console.log(us_cert[1]);
-          //console.log(res.data.entries[j].id);
           if(us_cert[0] == username && us_cert[1] == res.data.entries[j].id){
             console.log(res.data.entries[j]);
           }
@@ -156,6 +170,14 @@ router.post('/mycertificates', async (req, res, next) => {
   console.log('here');
   res.sendFile(x);
 });
+
+
+
+
+
+
+
+
 
 
 
