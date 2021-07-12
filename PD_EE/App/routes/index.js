@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const alert = require('alert');
 const axios = require('axios');
+const exec = require('child_process').exec;
+const { SSL_OP_EPHEMERAL_RSA } = require('constants');
+const writeline = require('prompt')
 
 // Lista de caracteres aceites para validação de input
 const whitelist = ('1234567890'+'abcdefghijklmnopqrstuvwxyz'+'abcdefghijklmnopqrstuvwxyz'.toUpperCase()+'_').split('');
@@ -120,6 +123,36 @@ async function login_aux(username, password, data) {
 	return false;
 }
 
+async function auxnewcert(){
+  console.log("madara")
+}
+
+router.post('/newcertificate', async (req, res, next) => {
+  
+  var request = req.body.request; //input de request
+
+  if(!(validate_input(request))){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }
+  else{
+
+    try {
+      //y = __dirname.split('/routes')[0] + '/views/newcert.html'; // carrega a página principal da aplicação se login estiver correto
+            //res.sendFile(y);
+      
+      exec('sudo openssl req -new -key ../../../../../../../root/ca/private/webserver.pem -out ../../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
+      await auxnewcert()
+    } catch (error) {
+      console.log(okdude);
+    }
+    
+  }
+  
+
+});
 
 
 
