@@ -5,7 +5,9 @@
         <div class="topnav">
             <h1>Create Request</h1>
         </div>
-        <form action="/home" method="post">
+        <form action="/newcertificateemit" method="post">
+            <label for="request">Request name:</label>
+            <input type="text" id="request" name="request"><br><br>
             <label for="country">Country:</label>
             <input type="text" id="country" name="country"><br><br>
             <label for="State or Province">State or Province:</label>
@@ -24,10 +26,6 @@
             <input type="text" id="pass" name="pass"><br><br>
             <label for="op_company">Optional Company name:</label>
             <input type="text" id="op_company" name="op_company"><br><br>
-
-        </form>
-
-        <form action="/home" method="post">
             <input type="submit" value="New request">
         </form>
 

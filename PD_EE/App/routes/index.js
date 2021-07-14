@@ -123,49 +123,55 @@ async function login_aux(username, password, data) {
 	return false;
 }
 
-async function auxnewcert(){
-  console.log("madara")
-}
 
 router.post('/newcertificate', async (req, res, next) => {
   
-  var request = req.body.request; //input de request
+  
+    try {
+      y = __dirname.split('/routes')[0] + '/views/newcert.html'; // carrega a página principal da aplicação se login estiver correto
+      res.sendFile(y);
+      
+      //exec('openssl req -new -key ../../../../../../../root/ca/private/webserver.pem -out ../../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
 
-  if(!(validate_input(request))){ // validação dos inputs recebidos 
-    x = __dirname.split('/routes')[0] + '/views/home.html';
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+
+router.post('/newcertificateemit', async (req, res, next) => {
+  var request = req.body.request; //input de request
+  var country = req.body.country;
+  var state = req.body.state;
+  var locality = req.body.locality;
+  var organization = req.body.organization;
+  var unit = req.body.unit;
+  var common = req.body.common;
+  var mail = req.body.mail;
+  var pass = req.body.pass;
+  var op_company = req.body.op_company;
+  if(!(validate_input(request) && validate_input(country) && validate_input(state) && validate_input(locality) && validate_input(organization) && validate_input(unit) && validate_input(common) && validate_input(mail) && validate_input(pass) && validate_input(op_company) )){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/newcert.html';
     res.sendFile(x);
     alert('Input com caracteres inválidos!')
     return;
+  }else{
+    exec('openssl req -new -key ../../../../../../root/ca/private/cakey.pem -out ../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
+    alert('Pedido de certificado criado!');
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
   }
-  else{
-
-    try {
-      //y = __dirname.split('/routes')[0] + '/views/newcert.html'; // carrega a página principal da aplicação se login estiver correto
-            //res.sendFile(y);
-      
-      exec('sudo openssl req -new -key ../../../../../../../root/ca/private/webserver.pem -out ../../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
-      await auxnewcert()
-    } catch (error) {
-      console.log(okdude);
-    }
-    
-  }
-  
-
 });
 
 
 
 
 
+module.exports = router;
 
 
-
-
-
-
-
-
+/*
 
 router.post('/mycertificates', async (req, res, next) => {
 
@@ -595,6 +601,6 @@ router.post('/ocsp', (req, res, next) => {
 });
 
 
+*/
 
 
-module.exports = router;
