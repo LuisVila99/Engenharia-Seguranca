@@ -157,6 +157,7 @@ router.post('/newcertificateemit', async (req, res, next) => {
     alert('Input com caracteres inválidos!')
     return;
   }else{
+    exec('ls', {encoding: 'utf-8'});
     exec('openssl req -new -key ../../../../../../root/ca/private/cakey.pem -out ../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
     alert('Pedido de certificado criado!');
     x = __dirname.split('/routes')[0] + '/views/home.html';
