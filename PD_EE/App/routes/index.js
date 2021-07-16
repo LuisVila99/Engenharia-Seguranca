@@ -146,30 +146,50 @@ router.post('/newcertificate', async (req, res, next) => {
 router.post('/newcertificateemit', async (req, res, next) => {
   var request = req.body.request; //input de request
   var country = req.body.country;
-  var state = req.body.state;
-  var locality = req.body.locality;
+  //var state = req.body.state;
+  //var locality = req.body.locality;
   var organization = req.body.organization;
-  var unit = req.body.unit;
+  //var unit = req.body.unit;
   var common = req.body.common;
-  var mail = req.body.mail;
-  var pass = req.body.pass;
-  var op_company = req.body.op_company;
-  if(!(validate_input(request) && validate_input(country) && validate_input(state) && validate_input(locality) && validate_input(organization) && validate_input(unit) && validate_input(common) && validate_input(mail) && validate_input(pass) && validate_input(op_company) )){ // validação dos inputs recebidos 
+  //var mail = req.body.mail;
+  //var pass = req.body.pass;
+  //var op_company = req.body.op_company;
+  if(!(validate_input(request) && validate_input(country) && validate_input(organization)  && validate_input(common) )){ // validação dos inputs recebidos 
     x = __dirname.split('/routes')[0] + '/views/newcert.html';
     res.sendFile(x);
     alert('Input com caracteres inválidos!')
     return;
   }else{
-    //exec('ls', {encoding: 'utf-8'});
-    exec('sudo openssl req -new -config ./serve.cnf -key /root/ca/private/cakey.pem -out /root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
+    await create_config(country, organization, common);
+    exec('sudo openssl req -new -config ./serv.cnf -key /root/ca/private/cakey.pem -out /root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
     alert('Pedido de certificado criado!');
     x = __dirname.split('/routes')[0] + '/views/home.html';
     res.sendFile(x);
   }
 });
 
-
-
+// Função que cria o ficheiro de configuração para emissão de um pedido de novo certificado
+async function create_config(country, orgname, fqdn){
+  var content = 'FQDN = '+fqdn+'\\n\
+ORGNAME = '+orgname+'\\n\
+ALTNAMES = DNS:$FQDN\\n\
+[ req ]\\n\
+default_bits = 2048\\n\
+default_md = sha256\\n\
+prompt = no\\n\
+encrypt_key = no\\n\
+distinguished_name = dn\\n\
+req_extensions = req_ext\\n\
+[ dn ]\\n\
+C = '+country+'\\n\
+O = $ORGNAME\\n\
+CN = $FQDN\\n\
+[ req_ext ]\\n\
+subjectAltName = $ALTNAMES';
+  var comando = 'echo $\'' + content + '\' > serv.cnf';
+  console.log(comando);
+  exec(comando, {encoding: 'utf-8'});
+}
 
 
 module.exports = router;
