@@ -161,7 +161,7 @@ router.post('/newcertificateemit', async (req, res, next) => {
     return;
   }else{
     //exec('ls', {encoding: 'utf-8'});
-    exec('sudo openssl req -new -key ../../../../../../root/ca/private/cakey.pem -out ../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
+    exec('openssl req -new -key /root/ca/private/cakey.pem -out /root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
     alert('Pedido de certificado criado!');
     x = __dirname.split('/routes')[0] + '/views/home.html';
     res.sendFile(x);
