@@ -10,6 +10,8 @@ const exec = require('child_process').exec;
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const writeline = require('prompt')
 
+var logged_user = ''; // variável onde se guarda o nome de utilizador que inicia sessão na aplicação
+
 // Lista de caracteres aceites para validação de input
 const whitelist = ('1234567890'+'abcdefghijklmnopqrstuvwxyz'+'abcdefghijklmnopqrstuvwxyz'.toUpperCase()+'_').split('');
 
@@ -92,6 +94,7 @@ router.post('/login', async (req, res, next) => {
       }
         x = await login_aux(username, password, data); //espera resultado da função auxiliar
         if(x){
+            logged_user = username; //guardar nome de utilizador que inicia sessão na aplicação
             x = __dirname.split('/routes')[0] + '/views/home.html'; // carrega a página principal da aplicação se login estiver correto
             res.sendFile(x);
         }
@@ -157,8 +160,8 @@ router.post('/newcertificateemit', async (req, res, next) => {
     alert('Input com caracteres inválidos!')
     return;
   }else{
-    exec('ls', {encoding: 'utf-8'});
-    exec('openssl req -new -key ../../../../../../root/ca/private/cakey.pem -out ../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
+    //exec('ls', {encoding: 'utf-8'});
+    exec('sudo openssl req -new -key ../../../../../../root/ca/private/cakey.pem -out ../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
     alert('Pedido de certificado criado!');
     x = __dirname.split('/routes')[0] + '/views/home.html';
     res.sendFile(x);
