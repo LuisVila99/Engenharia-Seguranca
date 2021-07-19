@@ -215,7 +215,43 @@ router.post('/ocsp', async (req, res, next) => {
 });
 
 
+router.post('/timestamp', async (req, res, next) => {
+  var cert = req.body.cert3;
 
+  if(!validate_input(cert)){
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    comando = 'sudo openssl ts -query -data /root/ca/certs/webserver.crt -out /root/ca/timestamp/'+cert+'.tsq';
+    console.log(comando);
+    exec(comando, { encoding: 'utf-8' });
+  }
+
+
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+})
+
+
+router.post('/timestampcheck', async (req, res, next) => {
+  var cert = req.body.cert4;
+  if(!validate_input(cert)){
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    comando = 'sudo openssl ts -verify -queryfile /root/ca/timestamp/'+cert+'.tsq -in /root/ca/timestamp/'+cert+'.tsr -CAfile /root/ca/cacert.pem -untrusted /root/ca/timestamp/tsa.pem >> ./timestamp.txt';
+    console.log(comando);
+    exec(comando, { encoding: 'utf-8' });
+  }
+
+
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+})
 
 
 module.exports = router;
