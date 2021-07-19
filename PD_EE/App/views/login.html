@@ -7,27 +7,53 @@
     <title>CertApp</title>
     <base href=".">
     <link rel="shortcut icon" href="#" />
-    <!--<link rel="stylesheet" type="text/css" href="./public/css/style.css"/>-->
+    <style>
+        body {
+            background-color: #3CB371;
+            margin-left: 1%;
+        }
+        div.form {
+            display: block;
+            text-align: center;
+        }
+        form {
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 5%;
+            margin-bottom: 0%;
+            text-align: left;
+        }
+        .topnav {
+            background-color: #8FBC8F;
+            overflow: hidden;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+    </style>
 </head>
 <body>
     <div class="topnav">
         <h1>CertApp</h1>
     </div>
-    <form action="/" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Register">
-    </form> 
-
-    <form action="/login" method="post">
-        <label for="username2">Username:</label>
-        <input type="text" id="username2" name="username2"><br><br>
-        <label for="password2">Password:</label>
-        <input type="password" id="password2" name="password2"><br><br>
-        <input type="submit" value="Login">
-    </form> 
+    <div class="form">
+        <form action="/" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"><br><br>
+            <input type="submit" value="Register">
+        </form>    
+    </div>
+    
+    <div class="form">
+        <form action="/login" method="post">
+            <label for="username2">Username:</label>
+            <input type="text" id="username2" name="username2"><br><br>
+            <label for="password2">Password:</label>
+            <input type="password" id="password2" name="password2"><br><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
     
     
     <script type="text/html" src="./public/javascripts/login.js"></script>
