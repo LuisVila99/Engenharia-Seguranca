@@ -193,6 +193,31 @@ subjectAltName = $ALTNAMES';
 }
 
 
+
+
+router.post('/ocsp', async (req, res, next) => {
+  var cert = req.body.cert1;
+
+  if(!validate_input(cert)){
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    comando = 'sudo openssl ocsp -CAfile /root/ca/cacert.pem -issuer /root/ca/cacert.pem -cert /root/ca/certs/'+cert+'.crt -url http://127.0.0.1:8080/ -resp_text -noverify > ./ocsp.txt';
+    console.log(comando);
+    exec(comando, { encoding: 'utf-8' });
+  }
+
+
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+});
+
+
+
+
+
 module.exports = router;
 
 
