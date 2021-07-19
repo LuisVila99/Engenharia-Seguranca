@@ -8,7 +8,7 @@ const alert = require('alert');
 const axios = require('axios');
 const exec = require('child_process').exec;
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
-const writeline = require('prompt')
+const writeline = require('prompt');
 
 var logged_user = ''; // variável onde se guarda o nome de utilizador que inicia sessão na aplicação
 
@@ -255,6 +255,12 @@ router.post('/timestampcheck', async (req, res, next) => {
 
 
 module.exports = router;
+
+
+
+
+
+
 
 
 /*
