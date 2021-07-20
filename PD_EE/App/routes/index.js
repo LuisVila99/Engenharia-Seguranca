@@ -127,15 +127,10 @@ async function login_aux(username, password, data) {
 }
 
 
-router.post('/newcertificate', async (req, res, next) => {
-  
-  
+router.post('/newcertificate', async (req, res, next) => {  
     try {
       y = __dirname.split('/routes')[0] + '/views/newcert.html'; // carrega a página principal da aplicação se login estiver correto
       res.sendFile(y);
-      
-      //exec('openssl req -new -key ../../../../../../../root/ca/private/webserver.pem -out ../../../../../../../root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
-
     } catch (error) {
         throw error;
     }
@@ -146,14 +141,9 @@ router.post('/newcertificate', async (req, res, next) => {
 router.post('/newcertificateemit', async (req, res, next) => {
   var request = req.body.request; //input de request
   var country = req.body.country;
-  //var state = req.body.state;
-  //var locality = req.body.locality;
   var organization = req.body.organization;
-  //var unit = req.body.unit;
   var common = req.body.common;
-  //var mail = req.body.mail;
-  //var pass = req.body.pass;
-  //var op_company = req.body.op_company;
+
   if(!(validate_input(request) && validate_input(country) && validate_input(organization)  && validate_input(common) )){ // validação dos inputs recebidos 
     x = __dirname.split('/routes')[0] + '/views/newcert.html';
     res.sendFile(x);
@@ -162,8 +152,14 @@ router.post('/newcertificateemit', async (req, res, next) => {
   }else{
     await create_config(country, organization, common);
     exec('sudo openssl req -new -config ./serv.cnf -key /root/ca/private/cakey.pem -out /root/ca/requests/' + request + '.csr', { encoding: 'utf-8' });
-    //alert('Pedido de certificado criado!');
-    //exec('rm ./serv.cnf', {encoding: 'utf-8'});
+
+    // regista em 'certs.txt' a que utilizador corresponde o novo pedido de certificado
+    var write = logged_user + ';' + request + '\n';
+    fs.appendFile('../certs.txt', write, function(err) {
+      if (err)
+        throw err;
+    });
+    
     x = __dirname.split('/routes')[0] + '/views/home.html';
     res.sendFile(x);
   }
@@ -227,6 +223,13 @@ router.post('/timestamp', async (req, res, next) => {
     comando = 'sudo openssl ts -query -data /root/ca/certs/webserver.crt -out /root/ca/timestamp/'+cert+'.tsq';
     console.log(comando);
     exec(comando, { encoding: 'utf-8' });
+
+    // regista em 'timestamps.txt' a que utilizador corresponde o novo pedido de timestamp
+    var write = logged_user + ';' + cert + '\n';
+    fs.appendFile('../timestamps.txt', write, function(err) {
+      if (err)
+        throw err;
+    });
   }
 
 
@@ -242,16 +245,40 @@ router.post('/timestampcheck', async (req, res, next) => {
     res.sendFile(x);
     alert('Input com caracteres inválidos!')
     return;
-  }else{
-    comando = 'sudo openssl ts -verify -queryfile /root/ca/timestamp/'+cert+'.tsq -in /root/ca/timestamp/'+cert+'.tsr -CAfile /root/ca/cacert.pem -untrusted /root/ca/timestamp/tsa.pem >> ./timestamp.txt';
-    console.log(comando);
-    exec(comando, { encoding: 'utf-8' });
   }
-
-
+  else{
+    var b = await check_user_timestamp(cert);
+    console.log(b);
+    if(!b){
+      alert('Timestamp não consta nos seus certificados!');
+    }
+    else{
+      comando = 'sudo openssl ts -verify -queryfile /root/ca/timestamp/'+cert+'.tsq -in /root/ca/timestamp/'+cert+'.tsr -CAfile /root/ca/cacert.pem -untrusted /root/ca/timestamp/tsa.pem >> ./timestamp.txt';
+      console.log(comando);
+      exec(comando, { encoding: 'utf-8' });
+      setTimeout(function () {data = fs.readFileSync('./timestamp.txt', 'utf8');alert(data.split('\n')[data.split('\n').length-2]);}, 3000);      
+    }
+  }
   x = __dirname.split('/routes')[0] + '/views/home.html';
   res.sendFile(x);
 })
+
+
+
+async function check_user_timestamp(timestamp){
+  data = fs.readFileSync('../timestamps.txt', 'utf8')
+  
+  var lines = data.split('\n');
+  for(let i = 0; i < lines.length-1; i++){
+      var us_cert = lines[i].split(';');
+      if(us_cert[0] == logged_user && us_cert[1] == timestamp){
+        console.log('ok');
+        return true;
+      }
+  }
+  return false;
+}
+
 
 
 module.exports = router;
