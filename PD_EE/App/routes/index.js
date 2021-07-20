@@ -211,25 +211,33 @@ router.post('/ocsp', async (req, res, next) => {
 });
 
 
-router.post('/timestamp', async (req, res, next) => {
-  var cert = req.body.cert3;
 
-  if(!validate_input(cert)){
+// Aqui alterar webserver para um certificado do utilizador 
+router.post('/timestamp', async (req, res, next) => {
+  var ts = req.body.ts;
+  var cert = req.body.cert3;
+  if(!(validate_input(cert) && validate_input(ts))){
     x = __dirname.split('/routes')[0] + '/views/home.html';
     res.sendFile(x);
     alert('Input com caracteres inválidos!')
     return;
   }else{
-    comando = 'sudo openssl ts -query -data /root/ca/certs/webserver.crt -out /root/ca/timestamp/'+cert+'.tsq';
-    console.log(comando);
-    exec(comando, { encoding: 'utf-8' });
+    var b = await check_user_cert(cert);
+    if(!b){
+      alert('Certificate not found!');
+    }
+    else{
+      comando = 'sudo openssl ts -query -data /root/ca/certs/'+cert+'.crt -out /root/ca/timestamp/'+ts+'.tsq';
+      console.log(comando);
+      exec(comando, { encoding: 'utf-8' });
 
-    // regista em 'timestamps.txt' a que utilizador corresponde o novo pedido de timestamp
-    var write = logged_user + ';' + cert + '\n';
-    fs.appendFile('../timestamps.txt', write, function(err) {
-      if (err)
-        throw err;
-    });
+      // regista em 'timestamps.txt' a que utilizador corresponde o novo pedido de timestamp
+      var write = logged_user + ';' + ts + '\n';
+      fs.appendFile('../timestamps.txt', write, function(err) {
+        if (err)
+          throw err;
+      });
+    }
   }
 
 
@@ -272,13 +280,26 @@ async function check_user_timestamp(timestamp){
   for(let i = 0; i < lines.length-1; i++){
       var us_cert = lines[i].split(';');
       if(us_cert[0] == logged_user && us_cert[1] == timestamp){
-        console.log('ok');
+        //console.log('ok');
         return true;
       }
   }
   return false;
 }
 
+async function check_user_cert(certificate){
+  data = fs.readFileSync('../certs.txt', 'utf8')
+  
+  var lines = data.split('\n');
+  for(let i = 0; i < lines.length-1; i++){
+      var us_cert = lines[i].split(';');
+      if(us_cert[0] == logged_user && us_cert[1] == certificate){
+        //console.log('ok');
+        return true;
+      }
+  }
+  return false;
+}
 
 
 module.exports = router;
