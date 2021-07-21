@@ -200,9 +200,16 @@ router.post('/ocsp', async (req, res, next) => {
     alert('Input com caracteres inválidos!')
     return;
   }else{
-    comando = 'sudo openssl ocsp -CAfile /root/ca/cacert.pem -issuer /root/ca/cacert.pem -cert /root/ca/certs/'+cert+'.crt -url http://127.0.0.1:8080/ -resp_text -noverify > ./ocsp.txt';
-    console.log(comando);
-    exec(comando, { encoding: 'utf-8' });
+      var b = await check_user_cert(cert);
+      if(!b){
+        alert('Certificate not found!');
+      }
+      else{
+        comando = 'sudo openssl ocsp -CAfile /root/ca/cacert.pem -issuer /root/ca/cacert.pem -cert /root/ca/certs/'+cert+'.crt -url http://127.0.0.1:8080/ -resp_text -noverify > ./ocsp.txt';
+        console.log(comando);
+        exec(comando, { encoding: 'utf-8' });
+        setTimeout(function(){exec('xdg-open ocsp.txt', {encoding:'utf-8'})}, 5000);
+      }
   }
 
 
