@@ -309,7 +309,46 @@ async function check_user_cert(certificate){
 }
 
 
+
+router.post('/mycertificates', async (req, res, next) => {
+  x = await my_certificates();
+  alert(x);
+  z = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(z);
+})
+
+
+async function my_certificates(){
+  data = fs.readFileSync('../certs.txt', 'utf8');
+  lines = data.split('\n');
+  res = 'Your certificates: ';
+  for(let i = 0; i < lines.length-1; i++){
+    us_cert = lines[i].split(';');
+    if(us_cert[0] == logged_user){
+      res = res + '\n' + us_cert[1];
+    }
+  }
+  return res;
+}
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
+
+
+
+
+
+
+
+
 
 
 
