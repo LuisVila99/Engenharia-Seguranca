@@ -332,7 +332,26 @@ async function my_certificates(){
 }
 
 
-
+router.post('/viewcertificate', async (req, res, next) => {
+  cert = req.body.viewcert;
+  if(!validate_input(cert)){
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }
+  else{
+      var b = await check_user_cert(cert);
+      if(!b){
+        alert('Certificate not found!');
+      }
+      else{
+        exec('sudo xdg-open /root/ca/certs/'+cert+'.crt', {encoding:'utf-8'});
+      }
+  }
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+})
 
 
 

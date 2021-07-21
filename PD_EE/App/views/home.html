@@ -30,11 +30,12 @@
             <h1>CertApp</h1>
         </div>
             <form action="/mycertificates" method="post">
-                <!--<label for="username3">Username:</label>-->
-                <!--<input type="text" id="username3" name="username3"><br><br>-->
-                <!--<label for="password3">Password:</label>-->
-                <!--<input type="text" id="password3" name="password3"><br><br>-->
                 <input type="submit" value="My certificates">
+            </form>
+            <form action="/viewcertificate" method="post">
+                <label for="viewcert">Certificate Name:</label>
+                <input type="text" id="viewcert" name="viewcert"><br><br>
+                <input type="submit" value="View certificate">
             </form>
             <form action="/newcertificate" method="post">
                 <input type="submit" value="New certificate">
