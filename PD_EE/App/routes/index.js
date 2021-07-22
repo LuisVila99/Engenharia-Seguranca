@@ -95,8 +95,14 @@ router.post('/login', async (req, res, next) => {
         x = await login_aux(username, password, data); //espera resultado da função auxiliar
         if(x){
             logged_user = username; //guardar nome de utilizador que inicia sessão na aplicação
-            x = __dirname.split('/routes')[0] + '/views/home.html'; // carrega a página principal da aplicação se login estiver correto
-            res.sendFile(x);
+            if(logged_user == 'admin'){
+              x = __dirname.split('/routes')[0] + '/views/admin.html'; // carrega a página principal da aplicação se login estiver correto
+              res.sendFile(x);
+            }
+            else{
+              x = __dirname.split('/routes')[0] + '/views/home.html'; // carrega a página principal da aplicação se login estiver correto
+              res.sendFile(x);
+            }            
         }
         else{
           x = __dirname.split('/routes')[0] + '/views/login.html'; // se o login estiver errado recerrega a página de registo/autenticação
@@ -216,6 +222,37 @@ router.post('/ocsp', async (req, res, next) => {
   x = __dirname.split('/routes')[0] + '/views/home.html';
   res.sendFile(x);
 });
+
+
+
+
+router.post('/crl', async (req, res, next) => {
+  var cert = req.body.cert0;
+
+  if(!validate_input(cert)){
+    x = __dirname.split('/routes')[0] + '/views/home.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+      var b = await check_user_cert(cert);
+      if(!b){
+        alert('Certificate not found!');
+      }
+      else{
+        comando = 'sudo openssl verify -extended_crl -verbose -CAfile /root/ca/crl/test.pem -crl_check /root/ca/certs/'+cert+'.crt > ./crl.txt';
+        console.log(comando);
+        exec(comando, { encoding: 'utf-8' });
+        setTimeout(function(){exec('xdg-open crl.txt', {encoding:'utf-8'})}, 5000);
+      }
+  }
+
+
+  x = __dirname.split('/routes')[0] + '/views/home.html';
+  res.sendFile(x);
+});
+
+
 
 
 
@@ -355,7 +392,11 @@ router.post('/viewcertificate', async (req, res, next) => {
 
 
 
-
+//router.post('/logout', async (req, res, next) => {
+//  logged_user = '';
+//  x = __dirname.split('/routes')[0] + '/views/login.html';
+//  res.sendFile(x);
+//})
 
 
 
