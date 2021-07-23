@@ -1,3 +1,7 @@
+/*********************\
+ * VARIÁVEIS GLOBAIS *
+\*********************/
+
 var express = require('express');
 var router = express.Router();
 
@@ -15,6 +19,11 @@ var logged_user = ''; // variável onde se guarda o nome de utilizador que inici
 // Lista de caracteres aceites para validação de input
 const whitelist = ('1234567890'+'abcdefghijklmnopqrstuvwxyz'+'abcdefghijklmnopqrstuvwxyz'.toUpperCase()+'_').split('');
 
+
+/*********************\
+ * VALIDAÇÃO DE INPUT *
+\*********************/
+
 // Função que servirá para validação de input, verificando se algum caracter do input não pertence à lista de caracteres permitidos
 function validate_input(input){
   for(let i = 0; i < input.length; i++){
@@ -24,15 +33,27 @@ function validate_input(input){
 }
 
 
-/* GET home page. */
-// Carrega o HTML da página inicial ao lançar a aplicação
+/*****************************\
+ * FUNCIONALIDADES APLICAÇÃO *
+\*****************************/
+
+
+
+/* GET home page. 
+ * Carrega o HTML da página inicial ao lançar a aplicação
+ */
 router.get('/', function(req, res, next) {
   x = __dirname.split('/routes')[0] + '/views/login.html';
   res.sendFile(x);
 });
 
 
-// Registo de um utilizador 
+/* Registo de um utilizador 
+ * Recebido input com o novo username e com a password para registo.
+ * Os inputs são validados.
+ * Verifica-se se o nome de utilizador já foi utilizado.
+ * É registado o novo utilizador.
+ */
 router.post('/', (req, res, next) => {
   var username = req.body.username; // input do username
   var password = req.body.password; // input da password
@@ -76,7 +97,12 @@ router.post('/', (req, res, next) => {
 
 
 
-// Login na aplicação 
+/* Login na aplicação. 
+ * Recebe o username e password como input.
+ * Valida os inputs.
+ * Verifica se o username existe e se a password inserida é a correta.
+ * Sendo o login bem-sucedido é carregada a página inicial da aplicação.
+ */
 router.post('/login', async (req, res, next) => {
   var username = req.body.username2; //input de username 
   var password = req.body.password2; //input de password
@@ -112,7 +138,9 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-//Função auxiliar que verifica se um nome de utilizador e respetiva password se encontram no ficheiro onde estes são guardados
+/* Auxiliar ao login. 
+ * Verifica se um nome de utilizador e respetiva password se encontram no ficheiro onde estes são guardados.
+ */
 async function login_aux(username, password, data) {
 	var entries = data.split('\n');
 
@@ -133,9 +161,12 @@ async function login_aux(username, password, data) {
 }
 
 
+/* Ação de clicar no botão de novo certificado. 
+ * Carrega a página onde se preenchem as informações para pedido de novo certificado.
+ */
 router.post('/newcertificate', async (req, res, next) => {  
     try {
-      y = __dirname.split('/routes')[0] + '/views/newcert.html'; // carrega a página principal da aplicação se login estiver correto
+      y = __dirname.split('/routes')[0] + '/views/newcert.html'; 
       res.sendFile(y);
     } catch (error) {
         throw error;
@@ -143,7 +174,12 @@ router.post('/newcertificate', async (req, res, next) => {
 });
 
 
-
+/* Emissão de novo pedido de certificado.
+ * São recebidas por input as informações necessárias para emissão de um novo certificado.
+ * Os inputs são validados.
+ * Cria-se um ficheiro de configuração que especifica com que informações será criado o novo certificado.
+ * Cria-se um certificate request com recurso a esse ficheiro e a um comando do OpenSSL.
+ */
 router.post('/newcertificateemit', async (req, res, next) => {
   var request = req.body.request; //input de request
   var country = req.body.country;
@@ -171,7 +207,9 @@ router.post('/newcertificateemit', async (req, res, next) => {
   }
 });
 
-// Função que cria o ficheiro de configuração para emissão de um pedido de novo certificado
+/* Auxiliar à emissão de um certificate reqquest. 
+ * Função que cria o ficheiro de configuração para emissão de um pedido de novo certificado.
+ */
 async function create_config(country, orgname, fqdn){
   var content = 'FQDN = '+fqdn+'\\n\
 ORGNAME = '+orgname+'\\n\
@@ -196,7 +234,13 @@ subjectAltName = $ALTNAMES';
 
 
 
-
+/* Verificação do estado de um certificado por OCSP. 
+ * Recebe como input qual o certificado sobre o qual ocorrerá a verificação.
+ * O input é validado.
+ * Verifica-se que o certificado pertence ao utilizador que faz o pedido de verificação.
+ * A verificação é efetuada através de um comando do OpenSSL.
+ * O seu resultado é guardado num ficheiro que é posteriormente aberto para o utilizador.
+ */
 router.post('/ocsp', async (req, res, next) => {
   var cert = req.body.cert1;
 
@@ -226,6 +270,13 @@ router.post('/ocsp', async (req, res, next) => {
 
 
 
+/* Verificação do estado de um certificado por CRL. 
+ * Recebe como input qual o certificado sobre o qual ocorrerá a verificação.
+ * O input é validado.
+ * Verifica-se que o certificado pertence ao utilizador que faz o pedido de verificação.
+ * A verificação é efetuada através de um comando do OpenSSL.
+ * O seu resultado é guardado num ficheiro que é posteriormente aberto para o utilizador.
+ */
 router.post('/crl', async (req, res, next) => {
   var cert = req.body.cert0;
 
@@ -258,7 +309,12 @@ router.post('/crl', async (req, res, next) => {
 
 
 
-// Aqui alterar webserver para um certificado do utilizador 
+/* Pedido de timestamp sobre um certificado.
+ * Recebe-se como input qual o certificado sobre o qual se quer o timestamp e qual o nome para o timestamp.
+ * Os inputs são validados.
+ * Verifica-se que o certificado pertence ao utilizador que pede o timestamp.
+ * É criado um pedido de timestamp através de um comando de OpenSSL.
+ */
 router.post('/timestamp', async (req, res, next) => {
   var ts = req.body.ts;
   var cert = req.body.cert3;
@@ -292,6 +348,13 @@ router.post('/timestamp', async (req, res, next) => {
 })
 
 
+/* Verificar timestamp. 
+ * Recebe como input qual o timestamp sobre o qual ocorrerá a verificação.
+ * O input é validado.
+ * Verifica-se que o timestamp pertence ao utilizador que faz o pedido de verificação.
+ * A verificação é efetuada através de um comando do OpenSSL.
+ * O seu resultado é guardado num ficheiro cuja informação é lida e passada ao utilizador por um alerta.
+ */
 router.post('/timestampcheck', async (req, res, next) => {
   var cert = req.body.cert4;
   if(!validate_input(cert)){
@@ -304,7 +367,7 @@ router.post('/timestampcheck', async (req, res, next) => {
     var b = await check_user_timestamp(cert);
     console.log(b);
     if(!b){
-      alert('Timestamp não consta nos seus certificados!');
+      alert('Timestamp não consta nos seus timestamps!');
     }
     else{
       comando = 'sudo openssl ts -verify -queryfile /root/ca/timestamp/'+cert+'.tsq -in /root/ca/timestamp/'+cert+'.tsr -CAfile /root/ca/cacert.pem -untrusted /root/ca/timestamp/tsa.pem >> ./timestamp.txt';
@@ -318,10 +381,10 @@ router.post('/timestampcheck', async (req, res, next) => {
 })
 
 
-
+/* Função auxiliar que verifica se um timestamp pertence ao utilizador ligado à aplicação num determinado momento.
+ */
 async function check_user_timestamp(timestamp){
-  data = fs.readFileSync('../timestamps.txt', 'utf8')
-  
+  data = fs.readFileSync('../timestamps.txt', 'utf8')  
   var lines = data.split('\n');
   for(let i = 0; i < lines.length-1; i++){
       var us_cert = lines[i].split(';');
@@ -333,9 +396,10 @@ async function check_user_timestamp(timestamp){
   return false;
 }
 
+/* Função auxiliar que verifica se um certificado pertence ao utilizador ligado à aplicação num determinado momento.
+ */
 async function check_user_cert(certificate){
-  data = fs.readFileSync('../certs.txt', 'utf8')
-  
+  data = fs.readFileSync('../certs.txt', 'utf8') 
   var lines = data.split('\n');
   for(let i = 0; i < lines.length-1; i++){
       var us_cert = lines[i].split(';');
@@ -348,7 +412,8 @@ async function check_user_cert(certificate){
 }
 
 
-
+/* Mostra a um utilizador quais são os seus certificados (pedidos e já aceites).
+ */
 router.post('/mycertificates', async (req, res, next) => {
   x = await my_certificates();
   alert(x);
@@ -357,6 +422,8 @@ router.post('/mycertificates', async (req, res, next) => {
 })
 
 
+/* Função auxiliar que verifica quais os certificados do utilizador a usar a aplicação num determinado momento.
+ */
 async function my_certificates(){
   data = fs.readFileSync('../certs.txt', 'utf8');
   lines = data.split('\n');
@@ -370,7 +437,11 @@ async function my_certificates(){
   return res;
 }
 
-
+/* Ver um certificado
+ * Utilizador indica qual o certificado que pretende ver.
+ * input é validado e verifica-se que o certificado pertence ao utilizador que pediu para o ver.
+ * É mostrado o conteúdo do certificado ao utilizador.
+ */
 router.post('/viewcertificate', async (req, res, next) => {
   cert = req.body.viewcert;
   if(!validate_input(cert)){
@@ -403,7 +474,11 @@ router.post('/viewcertificate', async (req, res, next) => {
  * ADMIN *
 \*********/
 
-
+/* Aceitar um certificate request.
+ * É dado como input o nome do request.
+ * Valida-se o input.
+ * Request é aceite e novo certificado criado com o mesmo nome por comando OpenSSL.
+ */
 router.post('/acceptcertificate', async (req, res, next) => {
   var cert = req.body.cert_to_accept;
   if(!validate_input(cert)){ // validação dos inputs recebidos 
@@ -422,7 +497,11 @@ router.post('/acceptcertificate', async (req, res, next) => {
 
 
 
-
+/* Revocar um certificado.
+ * É dado como input o nome do certificado.
+ * Valida-se o input.
+ * Certificado é revocado por comando OpenSSL.
+ */
 router.post('/revokecertificate', async (req, res, next) => {
   var cert = req.body.cert_to_revoke;
   if(!validate_input(cert)){ // validação dos inputs recebidos 
@@ -441,7 +520,11 @@ router.post('/revokecertificate', async (req, res, next) => {
 
 
 
-
+/* Aceitar um timestamp request.
+ * É dado como input o nome do request.
+ * Valida-se o input.
+ * Request é aceite e novo timestamp criado com o mesmo nome por comando OpenSSL.
+ */
 router.post('/accepttimestamp', async (req, res, next) => {
   var cert = req.body.time_to_accept;
   if(!validate_input(cert)){ // validação dos inputs recebidos 
@@ -461,452 +544,3 @@ router.post('/accepttimestamp', async (req, res, next) => {
 
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-router.post('/mycertificates', async (req, res, next) => {
-
-  var username = req.body.username3;
-  var password = req.body.password3;
-  var j = 0;
-  var dt = fs.readFileSync('../users.txt', 'utf8');
-  console.log(username);
-  console.log(password);
-  if(!login_aux(username, password, dt)){
-    console.log('Auth error');
-    return;
-  }
-
-  axios.get('https://fedora:8443/ca/rest/certs')
-  .then((res) => {
-    //console.log(res.data.entries[11].id);
-
-    fs.readFile('../certs.txt', 'utf8', async (err, data) => {
-      if(err) throw err;
-      var lines = data.split('\n');
-      for(let i = 0; i < lines.length-1; i++){
-        
-        //console.log(res.data.total);
-        for(j = 0; j < res.data.total; j++){
-          var us_cert = lines[i].split(';');
-          if(us_cert[0] == username && us_cert[1] == res.data.entries[j].id){
-            console.log(res.data.entries[j]);
-          }
-        } j=0;
-      }
-    })
-  });
-  x = __dirname.split('/routes')[0] + '/views/home.html';
-  console.log('here');
-  res.sendFile(x);
-});
-
-
-
-
-
-
-
-
-
-
-
-router.post('/newcertificate', (req, res, next) => {
-  var dat = {
-    "Attributes": {
-      "Attribute": []
-    },
-    "ProfileID": "caServerKeygen_UserCert",
-    "Renewal": false,
-    "Input": [
-      {
-        "id": "i1",
-        "ClassID": "serverKeygenInputImpl",
-        "Name": "Server-Side Key Generation",
-        "Text": null,
-        "Attribute": [
-          {
-            "name": "serverSideKeygenP12Passwd",
-            "Value": "Secret.123",
-            "Descriptor": {
-              "Syntax": "server_side_keygen_request_type",
-              "Constraint": null,
-              "Description": "Server-Side Key Generation P12 Password",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "keyType",
-            "Value": "RSA",
-            "Descriptor": {
-              "Syntax": "server_side_keygen_key_type",
-              "Constraint": null,
-              "Description": "Server-Side Key Generation Key Type",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "keySize",
-            "Value": "1024",
-            "Descriptor": {
-              "Syntax": "server_side_keygen_key_size",
-              "Constraint": null,
-              "Description": "Server-Side Key Generation Key Size",
-              "DefaultValue": null
-            }
-          }
-        ],
-        "ConfigAttribute": []
-      },
-      {
-        "id": "i2",
-        "ClassID": "subjectNameInputImpl",
-        "Name": "Subject Name",
-        "Text": null,
-        "Attribute": [
-          {
-            "name": "sn_uid",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "UID",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_e",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Email",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_cn",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Common Name",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_ou3",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Organizational Unit 3",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_ou2",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Organizational Unit 2",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_ou1",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Organizational Unit 1",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_ou",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Organizational Unit",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_o",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Organization",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "sn_c",
-            "Value": "PT",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Country",
-              "DefaultValue": null
-            }
-          }
-        ],
-        "ConfigAttribute": []
-      },
-      {
-        "id": "i3",
-        "ClassID": "submitterInfoInputImpl",
-        "Name": "Requestor Information",
-        "Text": null,
-        "Attribute": [
-          {
-            "name": "requestor_name",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Requestor Name",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "requestor_email",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Requestor Email",
-              "DefaultValue": null
-            }
-          },
-          {
-            "name": "requestor_phone",
-            "Value": "1",
-            "Descriptor": {
-              "Syntax": "string",
-              "Constraint": null,
-              "Description": "Requestor Phone",
-              "DefaultValue": null
-            }
-          }
-        ],
-        "ConfigAttribute": []
-      }
-    ]
-  }
-
-
-  var username = req.body.username4;
-  var password = req.body.password4;
-  var dt = fs.readFileSync('../users.txt', 'utf8');
-  console.log(username);
-  console.log(password);
-  if(!login_aux(username, password, dt) == false){
-    console.log('Auth error');
-    return;
-  }
-
-  //setTimeout(function(){ console.log("timeout"); }, 3000);
-
-  axios.post('https://fedora:8443/ca/rest/certrequests/', dat).then( (res) => {
-    console.log(res.data);
-    var str = res.data.entries[0].requestURL;
-    console.log(str);
-    console.log('aqui');
-    var num = parseInt(str.split('/')[str.split('/').length - 1]).toString(16);
-    num = '0x' + num;
-    console.log(num);
-    var write = username + ';' + num + '\n';
-    fs.appendFile('../certs.txt', write, function(err) {
-      if (err)
-        throw err;
-    });
-
-  }).catch( () => {});
-
-  x = __dirname.split('/routes')[0] + '/views/home.html';
-  console.log('here');
-  res.sendFile(x);
-});
-
-
-
-
-
-
-router.post('/newcertificatesignedocsp', (req, res, next) => {
-  var dat = {
-    "Attributes": [],
-    "ProfileID": "caOCSPCert",
-    "Renewal": "false",
-    "RemoteHost": [],
-    "RemoteAddress": [],
-    "Input": [
-       {
-          "@id": "i1",
-          "ClassID": "certReqInputImpl",
-          "Name": "Certificate Request Input",
-          "Attribute": [
-             {
-                "@name": "cert_request_type",
-                "Value": "pkcs10",
-                "Descriptor": {
-                   "Syntax": "cert_request_type",
-                   "Description": "Certificate Request Type"
-                }
-             },
-             {
-                "@name": "cert_request",
-                "Value": "-----BEGIN CERTIFICATE REQUEST----- MIICkjCCAXoCAQAwTTEQMA4GA1UECgwHRVhBTVBMRTETMBEGA1UECwwKcGtpLXRvbWNhdDEkMCIG A1UEAwwbQ0EgT0NTUCBTaWduaW5nIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A MIIBCgKCAQEA0U/2nGfi1pcX2laCadTzBZf+BIs+Ny50b0bLM3NQud/8YDr0R46WTDcHm/7cgkBI VpyibFEfuWF52REHL7mJxW5zAmi2mml4+niRSDnY1YoBmOjHecPYVH7deECnlIFTGsQW5q9fLvsx BGWNNo953u3G3SsweQw21dAxl84EnFO9wJS9OW5OQUj1RAZu2U2vaHYtO3E9EkxGa/1bhhUMFPoL RlyGrHbMScOMrQ/nC7Id+cxrJQlC7lOi5f14/2jUzRL3MRBI5E/26kd0uHtmO1MhjkeXj1qB6Vdo Ua+igC0Me/XNdm68YzCAYp0QhT+CNn5dy2jMU44FwDZzqxa8/wIDAQABoAAwDQYJKoZIhvcNAQEL BQADggEBAE2JGtFTWsa8lkq4BaWqoQjNLmhJNAORSOgsRAETPnHa3bIOvFb+fRojIPaDc1bOpnA2 sVMXgMjEaho9DfWCFYYHT+pkA0A9iIWQ6FIKGhjPhPJiLGZNoVqiaaXoOY8FJRu3YZfrMrtGJWtK NUMedbNACKiqsKj54aV+m0nInOb3qKXZBprjMYoktESvGYKSLH5EkGLEiPs9zU/2wmwGXX8W+Y+Q 6Cayb+/IBRMqINGXE2cUpaCUSWm3HJTA08YAAz67VihP+xJB+OJ2o81eKFMfcBSS23cr75VXQLsl K1j29/7tMaPCx5J6nyJq+Woi6D9GNFCGl+GuI/Bv7lZHpaM= -----END CERTIFICATE REQUEST----- ",
-                "Descriptor": {
-                   "Syntax": "cert_request",
-                   "Description": "Certificate Request"
-                }
-             }
-          ]
-       },
-       {
-          "@id": "i2",
-          "ClassID": "submitterInfoInputImpl",
-          "Name": "Requestor Information",
-          "Attribute": [
-             {
-                "@name": "requestor_name",
-                "Value": "1",
-                "Descriptor": {
-                   "Syntax": "string",
-                   "Description": "Requestor Name"
-                }
-             },
-             {
-                "@name": "requestor_email",
-                "Value": "1",
-                "Descriptor": {
-                   "Syntax": "string",
-                   "Description": "Requestor Email"
-                }
-             },
-             {
-                "@name": "requestor_phone",
-                "Value": "1",
-                "Descriptor": {
-                   "Syntax": "string",
-                   "Description": "Requestor Phone"
-                }
-             }
-          ]
-       }
-    ]
- };
-
-
-  var username = req.body.username5;
-  var password = req.body.password5;
-  var dt = fs.readFileSync('../users.txt', 'utf8');
-  console.log(username);
-  console.log(password);
-  if(!login_aux(username, password, dt)){
-    console.log('Auth error');
-    return;
-  }
-
-
-  setTimeout(function(){ console.log("timeout"); }, 3000);
-
-
-  console.log('aqui1');
-  axios.post('https://fedora:8443/ca/rest/certrequests/', dat).then( (res) => {
-    console.log('aqui2')
-    console.log(res.data);
-    var str = res.data.entries[0].requestURL;
-    console.log(str);
-    console.log('aqui');
-    var num = parseInt(str.split('/')[str.split('/').length - 1]).toString(16);
-    num = '0x' + num;
-    console.log(num);
-    var write = username + ';' + num + '\n';
-    fs.appendFile('../certs.txt', write, function(err) {
-      if (err)
-        throw err;
-    });
-
-  }).catch( () => {});
-
-  x = __dirname.split('/routes')[0] + '/views/home.html';
-  console.log('here');
-  res.sendFile(x);
-});
-
-
-
-
-
-router.post('/crl', async (req, res, next) => {
-  var cert = req.body.cert0;
-  var r = 0;
-  console.log(cert);
-  var boo = false;
-  axios.get('https://fedora:8443/ca/rest/certs').then( (res) => {
-    for(let i=0; i < res.data.entries.length; i++){
-      if(res.data.entries[i].Status == 'REVOKED'){
-        fs.appendFile('../crl.txt', res.data.entries[i].id + '\n', function(err){
-            if(err) throw err;            
-        });
-      }
-      else {if(i==res.data.entries.length-1) auxiliar(cert);}
-    }
-  });
-  x = __dirname.split('/routes')[0] + '/views/home.html';
-  res.sendFile(x);
-});
-
-
-async function auxiliar(cert){
-  var boo = false;
-  cert = '0x' + parseInt(cert).toString(16);
-  fs.readFile('../crl.txt', 'utf8', (err, data) => {
-    if(err) throw err;
-    d = data.split('\n');
-    for(let i = 0; i < d.length; i++){
-      if(cert == d[i]) boo = true;
-    }
-    if(boo) alert('REVOKED');
-    else alert('VALID');
-  });
-}
-
-
-
-router.post('/ocsp', (req, res, next) => {
-  var cert = req.body.cert1;
-  var link = 'https://fedora:8443/ca/rest/certs/' + cert;
-  axios.get(link).then( (res) => {
-      alert(res.data.Status);
-  });
-  x = __dirname.split('/routes')[0] + '/views/home.html';
-  res.sendFile(x);
-});
-
-
-*/
-
-
