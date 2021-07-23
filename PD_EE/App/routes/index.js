@@ -240,6 +240,8 @@ router.post('/crl', async (req, res, next) => {
         alert('Certificate not found!');
       }
       else{
+        exec('openssl ca -gencrl -keyfile /root/ca/private/cakey.pem -cert /root/ca/cacert.pem -out /root/ca/crl/crl.pem', { encoding: 'utf-8' });
+        exec('cat /root/ca/cacert.pem /root/ca/crl/crl.pem > /root/ca/crl/test.pem', { encoding: 'utf-8' });
         comando = 'sudo openssl verify -extended_crl -verbose -CAfile /root/ca/crl/test.pem -crl_check /root/ca/certs/'+cert+'.crt > ./crl.txt';
         console.log(comando);
         exec(comando, { encoding: 'utf-8' });
@@ -392,11 +394,69 @@ router.post('/viewcertificate', async (req, res, next) => {
 
 
 
-//router.post('/logout', async (req, res, next) => {
-//  logged_user = '';
-//  x = __dirname.split('/routes')[0] + '/views/login.html';
-//  res.sendFile(x);
-//})
+
+
+
+
+
+/*********\
+ * ADMIN *
+\*********/
+
+
+router.post('/acceptcertificate', async (req, res, next) => {
+  var cert = req.body.cert_to_accept;
+  if(!validate_input(cert)){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/admin.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    com = 'sudo openssl ca -batch -in /root/ca/requests/'+cert+'.csr -out /root/ca/certs/'+cert+'.crt';
+    console.log(com);
+    exec(com, { encoding: 'utf-8' });
+  }
+  x = __dirname.split('/routes')[0] + '/views/admin.html';
+  res.sendFile(x);
+})
+
+
+
+
+router.post('/revokecertificate', async (req, res, next) => {
+  var cert = req.body.cert_to_revoke;
+  if(!validate_input(cert)){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/admin.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    com = 'sudo openssl ca -revoke /root/ca/certs/'+cert+'.crt -keyfile /root/ca/private/cakey.pem -cert /root/ca/cacert.pem ';
+    console.log(com);
+    exec(com, { encoding: 'utf-8' });
+  }
+  x = __dirname.split('/routes')[0] + '/views/admin.html';
+  res.sendFile(x);
+})
+
+
+
+
+router.post('/accepttimestamp', async (req, res, next) => {
+  var cert = req.body.time_to_accept;
+  if(!validate_input(cert)){ // validação dos inputs recebidos 
+    x = __dirname.split('/routes')[0] + '/views/admin.html';
+    res.sendFile(x);
+    alert('Input com caracteres inválidos!')
+    return;
+  }else{
+    com = 'sudo openssl ts -reply -queryfile /root/ca/timestamp/'+cert+'.tsq -out /root/ca/timestamp/'+cert+'.tsr';
+    console.log(com);
+    exec(com, { encoding: 'utf-8' });
+  }
+  x = __dirname.split('/routes')[0] + '/views/admin.html';
+  res.sendFile(x);
+})
 
 
 

@@ -3,3 +3,8 @@ hugo;reqhugo
 luis;tic
 luis;AU
 hugo;webserver
+hugo;novohugo
+hugo;newhugo
+tf;tfcert
+tf;tfcert
+oi;oic

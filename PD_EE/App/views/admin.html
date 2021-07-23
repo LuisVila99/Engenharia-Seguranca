@@ -29,38 +29,20 @@
         <div class="topnav">
             <h1>Admin Page</h1>
         </div>
-            <form action="/mycertificates" method="post">
-                <input type="submit" value="My certificates">
+            <form action="/acceptcertificate" method="post">
+                <label for="cert_to_accept">Certificate Name:</label>
+                <input type="text" id="cert_to_accept" name="cert_to_accept"><br><br>
+                <input type="submit" value="Accept certificate">
             </form>
-            <form action="/viewcertificate" method="post">
-                <label for="viewcert">Certificate Name:</label>
-                <input type="text" id="viewcert" name="viewcert"><br><br>
-                <input type="submit" value="View certificate">
+            <form action="/revokecertificate" method="post">
+                <label for="cert_to_revoke">Certificate Name:</label>
+                <input type="text" id="cert_to_revoke" name="cert_to_revoke"><br><br>
+                <input type="submit" value="Revoke certificate">
             </form>
-            <form action="/newcertificate" method="post">
-                <input type="submit" value="New certificate">
-            </form>
-            <form action="/ocsp" method="post">
-                <label for="cert1">Certificate Name:</label>
-                <input type="text" id="cert1" name="cert1"><br><br>
-                <input type="submit" value="OCSP">
-            </form>
-            <form action="/crl" method="post">
-                <label for="cert0">Certificate Name:</label>
-                <input type="text" id="cert0" name="cert0"><br><br>
-                <input type="submit" value="CRL">
-            </form>
-            <form action="/timestamp" method="post">
-                <label for="ts">Timestamp Name:</label>
-                <input type="text" id="ts" name="ts"><br><br>
-                <label for="cert3">Certificate to timestamp:</label>
-                <input type="text" id="cert3" name="cert3"><br><br>
-                <input type="submit" value="New TimeStamp">
-            </form>
-            <form action="/timestampcheck" method="post">
-                <label for="cert4">Timestamp Name:</label>
-                <input type="text" id="cert4" name="cert4"><br><br>
-                <input type="submit" value="Check TimeStamp">
+            <form action="/accepttimestamp" method="post">
+                <label for="time_to_accept">Certificate Name:</label>
+                <input type="text" id="time_to_accept" name="time_to_accept"><br><br>
+                <input type="submit" value="Accept timestamp">
             </form>
             <div class="logout">
                 <input type="submit" value="Log Off">

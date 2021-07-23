@@ -3,35 +3,36 @@ OCSP Response Data:
     Response Type: Basic OCSP Response
     Version: 1 (0x0)
     Responder Id: C = AU, ST = Some-State, O = Internet Widgits Pty Ltd, CN = ca.project.local, emailAddress = ppp
-    Produced At: Jul 22 17:04:15 2021 GMT
+    Produced At: Jul 23 14:42:52 2021 GMT
     Responses:
     Certificate ID:
       Hash Algorithm: sha1
       Issuer Name Hash: 3A106477266F41F77C94D60E9C633539D405875E
       Issuer Key Hash: 4B96795A76394EA2C058126CE7525CAC08E9277B
-      Serial Number: 1238
-    Cert Status: good
-    This Update: Jul 22 17:04:15 2021 GMT
+      Serial Number: 123B
+    Cert Status: revoked
+    Revocation Time: Jul 23 14:40:28 2021 GMT
+    This Update: Jul 23 14:42:52 2021 GMT
 
     Response Extensions:
         OCSP Nonce: 
-            0410AEE719885BBC9BB861E89D0E7DB1D7BB
+            0410FD0DB5967E861A87A37E7B67546B8E6B
     Signature Algorithm: sha256WithRSAEncryption
-         48:66:a7:83:03:33:cc:02:1d:57:41:08:db:94:b7:7c:06:cf:
-         b9:b3:35:b2:60:cd:62:e6:ca:6e:01:7a:8b:0a:c3:71:be:55:
-         1c:8f:74:e7:d2:2d:9f:d3:dc:3c:00:87:13:3b:66:73:e5:15:
-         ce:58:f0:02:23:03:46:f8:df:f6:7d:c6:e2:d9:c2:04:4c:a6:
-         f8:02:22:51:97:f0:2d:02:53:9c:fc:56:14:ef:9f:a6:57:96:
-         90:6f:c1:0a:a9:d4:33:46:51:ec:6f:ce:13:a9:5f:e7:96:8d:
-         fc:9c:fa:22:8d:d8:41:59:4b:b2:65:07:8a:da:7e:ed:f8:94:
-         5e:57:9b:e6:de:24:d8:56:10:44:39:f0:7d:b1:3a:e8:dc:73:
-         28:c2:99:a2:32:79:29:c8:af:b5:01:bd:7e:e7:ea:1f:f8:dd:
-         95:dd:bb:9f:34:7d:63:f8:dd:f5:7f:9b:eb:7e:57:d9:d6:01:
-         43:20:ed:3f:33:63:56:3c:c6:f9:32:f8:bb:0e:17:3d:f6:73:
-         72:be:eb:71:f8:cf:7a:ef:7b:da:33:47:17:08:f8:26:57:ce:
-         c3:4c:f7:4a:fd:57:ca:74:43:f9:34:de:bf:43:df:40:d2:ef:
-         50:60:78:91:f2:56:9b:35:ec:22:eb:9b:49:59:f7:5b:21:0a:
-         9a:97:8a:e7
+         92:5a:b7:10:9a:86:f2:0e:d7:65:f7:46:cc:bc:72:34:16:dc:
+         b3:dc:5c:ae:ff:f5:ea:d9:d1:cc:c2:39:81:70:40:57:fa:36:
+         d8:15:41:63:dc:42:ec:eb:6d:07:c8:46:aa:ac:34:ae:0b:c4:
+         fd:e0:00:60:a8:8d:9f:7c:5c:cd:b0:d4:ea:64:90:3f:46:22:
+         e2:62:90:88:fb:f7:d0:5f:d0:1a:ee:47:bf:ce:45:52:78:1e:
+         2a:16:e0:98:bc:a0:ee:98:1c:3b:3c:6c:3f:40:d1:cf:8b:1f:
+         cc:e2:e4:98:da:4d:6a:90:83:ba:16:38:1a:0c:6f:9d:84:81:
+         fe:8a:f8:d5:5c:0b:1a:ab:92:df:15:ce:fd:a6:65:a1:22:07:
+         6c:28:c8:ef:4d:b5:dc:2c:92:e8:f7:f5:01:73:5f:38:b1:21:
+         46:ed:63:fe:4a:75:a3:ae:40:03:b8:34:5d:c5:47:93:fc:1b:
+         6f:7e:72:8c:e1:bf:91:b0:7b:e6:82:84:0d:79:ec:fa:c5:bb:
+         27:58:3b:e5:93:88:02:5d:71:56:9f:ae:2f:78:40:45:92:bd:
+         1b:11:ad:f9:b2:97:18:f2:01:0d:0f:27:42:a7:f8:b1:bf:af:
+         33:7b:b1:4d:65:f1:25:ac:31:7a:9f:67:62:c6:76:9f:dd:19:
+         36:79:dc:85
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -137,5 +138,6 @@ cjydt3MzIsWiXmle00Y+GxGDgTmhyO2ROTHrrPx0rkEjSg5sq5atB7VFfMspCWR0
 24adqKcLihyEk2nSjBq9K809q8edzCJgwS4kD/wICFfiDzAxRzF3nmA0X88PkTjS
 arg5LB378M0v
 -----END CERTIFICATE-----
-/root/ca/certs/AU.crt: good
-	This Update: Jul 22 17:04:15 2021 GMT
+/root/ca/certs/oic.crt: revoked
+	This Update: Jul 23 14:42:52 2021 GMT
+	Revocation Time: Jul 23 14:40:28 2021 GMT

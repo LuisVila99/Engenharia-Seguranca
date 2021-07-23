@@ -1,5 +1,5 @@
-FQDN = AU
-ORGNAME = AU
+FQDN = oi
+ORGNAME = oi
 ALTNAMES = DNS:$FQDN
 [ req ]
 default_bits = 2048
@@ -9,7 +9,7 @@ encrypt_key = no
 distinguished_name = dn
 req_extensions = req_ext
 [ dn ]
-C = AU
+C = PT
 O = $ORGNAME
 CN = $FQDN
 [ req_ext ]
