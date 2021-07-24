@@ -48,21 +48,22 @@ router.get('/', function(req, res, next) {
 });
 
 
+
 /* Registo de um utilizador 
  * Recebido input com o novo username e com a password para registo.
  * Os inputs são validados.
  * Verifica-se se o nome de utilizador já foi utilizado.
  * É registado o novo utilizador.
  */
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   var username = req.body.username; // input do username
   var password = req.body.password; // input da password
   var ok = true;
 
-  if(!(validate_input(username) && validate_input(password))){ // validação dos inputs recebidos 
+  if(!(validate_input(username) && validate_input(password) && await val(password))){ // validação dos inputs recebidos 
     x = __dirname.split('/routes')[0] + '/views/login.html';
     res.sendFile(x);
-    alert('Input com caracteres inválidos!')
+    alert('Input com caracteres inválidos ou password com tamanho incorreto!')
     return;
   }
   else {
@@ -95,6 +96,14 @@ router.post('/', (req, res, next) => {
     
 })
 
+/* Validação do tamanho das passwords
+*/
+async function val(pass){
+  if(pass.length < 12 || pass.length > 128){
+    return false;
+  }
+  return true;
+}
 
 
 /* Login na aplicação. 
@@ -538,6 +547,17 @@ router.post('/accepttimestamp', async (req, res, next) => {
     exec(com, { encoding: 'utf-8' });
   }
   x = __dirname.split('/routes')[0] + '/views/admin.html';
+  res.sendFile(x);
+})
+
+
+
+
+/* Logout da aplicação
+ */
+router.post('/logout', async (req, res, next) => {
+  logged_user = '';
+  x = __dirname.split('/routes')[0] + '/views/login.html';
   res.sendFile(x);
 })
 

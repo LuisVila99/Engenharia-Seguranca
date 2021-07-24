@@ -10,3 +10,8 @@ novo;$2b$10$zsgrgaLxqE5y84nCbM.kWOs8epbRt8Mh6u7P.ADs48mkCCmWk9uAK
 Joao_Andre;$2b$10$f7nXFiGsXpxNDvtDDzK44.5Y3u9Sh.AmEn57q3wu04ZM0N84piirO
 Paco;$2b$10$t0OsGvQRTjcAv.eJs12dreShsZ6EAFyoggLePRwKYc/EiZVleQeg.
 admin;$2b$10$.Gzy6zAldQLwz8G3w2a/XuLYf6wZk.HcwQFaBV92lXv13Ii/skIHe
+zequinha;$2b$10$xBFTz0WPjTQLqlYYRxhJv.Rf4lJZBUpVKQOXPzJvE4wxiOTIjby.S
+newnew;$2b$10$MrRHIiE8A0ZVN0.Zi2tRXOKiixhKdveot7gnAipe2D3Zd.7/3YyzC
+aaaaaaaaaaaaaaaaaaaa;$2b$10$lgMnfRZceU9pM4.Uaj4Lw.lEAHMDV3.JoEd/TJgfWGdut0QCrVIim
+aaa;$2b$10$nNo/KF/mT0tBD.iJj0pxCu/w74/2oULvjqoMGcRn/mRSsvQH1ATkK
+12345;$2b$10$mymtOl4djR1g/k4YHjRmy.0FRHojqw2OD9mB0iSMSfva.TMxajYNG
