@@ -1,1 +1,1 @@
-/root/ca/certs/oic.crt: OK
+error /root/ca/certs/ze.crt: verification failed

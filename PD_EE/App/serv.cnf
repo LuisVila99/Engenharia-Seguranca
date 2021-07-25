@@ -1,5 +1,5 @@
-FQDN = oi
-ORGNAME = oi
+FQDN = OI
+ORGNAME = OI
 ALTNAMES = DNS:$FQDN
 [ req ]
 default_bits = 2048
